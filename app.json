@@ -1,0 +1,27 @@
+{
+  "name": "Parse Server Example",
+  "description": "An example Parse API server using the parse-server module",
+  "repository": "https://github.com/adrielcafe/NMSAlphabetServer",
+  "logo": "https://avatars0.githubusercontent.com/u/1294580?v=3&s=200",
+  "keywords": ["node", "express", "parse"],
+  "env": {
+    "PARSE_MOUNT": {
+      "description": "Configure Parse API route.",
+      "value": "/api"
+    },
+    "APP_ID": {
+      "description": "A unique identifier for your app.",
+      "value": "20A2FAB7ED2645B4D3B25DCC372AB208AF62DDB5251D72733924045CE7F3781D"
+    },
+    "MASTER_KEY": {
+      "description": "A key that overrides all permissions. Keep this secret.",
+      "value": "9FCD83D4CCD66B001DAF1E5A58EBD32D3691B7E8A819D9A495F229080F61641834267FD4CE28A6FCC07C487701B8BED6A8CC267783378FAA1E5815D48C9CB1A7"
+    },
+    "SERVER_URL": {
+      "description": "URL to connect to your Heroku instance (update with your app's name + PARSE_MOUNT)",
+      "value": "http://nmsalphabet.herokuapp.com/api"
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": ["mongolab"]
+}
