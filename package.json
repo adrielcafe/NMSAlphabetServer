@@ -1,7 +1,7 @@
 {
   "name": "nmsalphabet",
   "version": "1.4.0",
-  "description": "An example Parse API server using the parse-server module",
+  "description": "An unofficial app for No Man's Sky",
   "main": "index.js",
   "repository": {
     "type": "git",
