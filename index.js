@@ -15,7 +15,7 @@ var api = new ParseServer({
   masterKey: process.env.MASTER_KEY || '', 
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/api',
   liveQuery: {
-    classNames: ["Posts", "Comments"]
+    classNames: []
   }
 });
 
