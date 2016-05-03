@@ -9,16 +9,24 @@ function printError(tag, error){
 
 Parse.Cloud.afterSave("AlienWord", function(req) {
 	var tag =  "afterSave_AlienWord";
-	var word = req.object;
-	word.get("users").query().count({
-		success: function(usersCount) {
-			console.log("USERSCOUNT: " + userscount);
-			word.set("usersCount", usersCount);
-			word.save();
-		},
-		error: function(error) {
-			console.error("ERROR: " + JSON.stringify(error));
-			printError(tag, error);
-		}
+	var wordId = req.object.id;
+	new Parse.Query(wordClass).get(wordId, {
+		success: function(word) {
+			word.get("users").query().count({
+				success: function(usersCount) {
+					console.log("USERSCOUNT: " + userscount);
+					word.set("usersCount", usersCount);
+					word.save();
+				},
+				error: function(error) {
+					console.error("ERROR: " + JSON.stringify(error));
+					printError(tag, error);
+				}
+			});	
+	    },
+	    error: function(error) {
+		console.error("ERROR: " + JSON.stringify(error));
+	   	printError(tag, error);
+	    }
 	});
 });
