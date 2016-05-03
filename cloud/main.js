@@ -10,8 +10,10 @@ function printError(tag, error){
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var word = req.object;
 	var users = word.get("users");
-	console.log("USERS 1: " + users.get("__op"));
-	console.log("USERS 2: " + users.__op);
-	word.increment("usersCount");
+	console.log("USERS 1: " + users.__op);
+	if(users.__op === "AddRelation"){
+	console.log("USERS INCREMENT");
+		word.increment("usersCount");
+	}
 	res.success();
 });
