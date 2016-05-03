@@ -12,6 +12,7 @@ Parse.Cloud.afterSave("AlienWord", function(req) {
 	var wordId = req.object.id;
 	new Parse.Query(wordClass).get(wordId, {
 		success: function(word) {
+			console.error("WORD: " + JSON.stringify(word));
 			word.get("users").query().count({
 				success: function(usersCount) {
 					console.log("USERSCOUNT: " + userscount);
