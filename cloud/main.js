@@ -12,13 +12,14 @@ function printError(tag, error){
 function isAddRelation(obj, relationName){
 	var jsonSnippet = '"' + relationName + '":{"__op":"AddRelation"';
 	console.log(jsonSnippet);
+	console.log(JSON.stringify(obj).contains(jsonSnippet));
 	return JSON.stringify(obj).contains(jsonSnippet);
 }
 
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var word = req.object;
 	var users = word.get("users");
-	if(isAddRelation(word)){
+	if(isAddRelation(word, "users")){
 		console.log("USERS INCREMENT");
 		word.increment("usersCount");
 	}
