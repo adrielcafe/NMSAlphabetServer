@@ -9,6 +9,11 @@ function printError(tag, error){
 
 Parse.Cloud.afterSave("AlienWord", function(req) {
 	var tag =  "afterSave_AlienWord";
-	var word = req.object;
-	
+	var wordId = req.object.id;
+	new Parse.Query(wordClass).get(wordId).then(function(word) {
+	    word.increment("usersCount");
+	    word.save();
+	  }, function(error) {
+	    throw "Got an error " + error.code + " : " + error.message;
+	});
 });
