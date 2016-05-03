@@ -8,7 +8,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	if(willAddRelation(word, "users")){
 		word.increment("usersCount", 1);
 	} else if(willRemoveRelation(word, "users")){
-		word.decrement("usersCount", -1);
+		word.increment("usersCount", -1);
 	}
 	res.success();
 });
@@ -21,7 +21,7 @@ Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	if(willAddRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", 1);
 	} else if(willRemoveRelation(wordTranslation, "users")){
-		wordTranslation.decrement("usersCount", -1);
+		wordTranslation.increment("usersCount", -1);
 	}
 	res.success();
 });
