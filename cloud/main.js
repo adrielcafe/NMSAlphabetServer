@@ -11,6 +11,5 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var tag =  "afterSave_AlienWord";
 	var word = req.object;
 	word.increment("usersCount");
-	word.save();
 	res.success();
 });
