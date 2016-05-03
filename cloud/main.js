@@ -10,7 +10,7 @@ function printError(tag, error){
 Parse.Cloud.afterSave("AlienWord", function(req) {
 	var tag =  "afterSave_AlienWord";
 	var word = req.object;
-	console.log("WORD: " + word);
+	console.log("WORD: " + JSON.stringify(word));
 	word.get("users").query().count({
 		success: function(usersCount) {
 			console.log("USERSCOUNT: " + userscount);
