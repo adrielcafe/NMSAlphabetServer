@@ -3,6 +3,6 @@ var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 
 Parse.Cloud.afterSave("AlienWord", function(req) {
 	var tag =  "afterSave_AlienWord";
-	var wordId = request.object.id;
+	var wordId = req.object.id;
 	console.log(wordId + ", " + wordClass + ", " + JSON.stringify(wordClass));
 });
