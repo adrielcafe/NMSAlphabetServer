@@ -9,10 +9,10 @@ function printError(tag, error){
 	}
 };
 
-function isAddRelation(obj){
-	console.log(JSON.stringify(obj));
-	console.log(JSON.stringify(obj).contains("AddRelation")+"");
-	return JSON.stringify(obj).contains("AddRelation");
+function isAddRelation(obj, relationName){
+	var jsonSnippet = '"' + relationName + '":{"__op":"AddRelation"';
+	console.log(jsonSnippet);
+	return JSON.stringify(obj).contains(jsonSnippet);
 }
 
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
