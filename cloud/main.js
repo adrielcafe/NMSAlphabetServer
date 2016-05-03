@@ -7,12 +7,13 @@ function printError(tag, error){
 	}
 };
 
-Parse.Cloud.afterSave("AlienWord", function(req) {
+Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var tag =  "afterSave_AlienWord";
 	var wordId = req.object.id;
 	new Parse.Query(wordClass).get(wordId).then(function(word) {
 			word.increment("usersCount");
 			word.save();
+			res.success();
 		}, function(error) {
 			throw "Got an error " + error.code + " : " + error.message;
 		}
