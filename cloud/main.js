@@ -18,7 +18,7 @@ function isAddRelation(obj){
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var word = req.object;
 	var users = word.get("users");
-	if(isAddRelation(users)){
+	if(isAddRelation(word)){
 		console.log("USERS INCREMENT");
 		word.increment("usersCount");
 	}
