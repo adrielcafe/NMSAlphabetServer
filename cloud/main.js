@@ -8,10 +8,10 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
 	if(!newWord.get("objectId") || willAddRelation(newWord, "users") || willRemoveRelation(newWord, "users")){
 		console.log(JSON.stringify(newWord));
-		if(willAddRelation(word, "users")){
-			word.increment("usersCount", 1);
-		} else if(willRemoveRelation(word, "users")){
-			word.increment("usersCount", -1);
+		if(willAddRelation(newWord, "users")){
+			newWord.increment("usersCount", 1);
+		} else if(willRemoveRelation(newWord, "users")){
+			newWord.increment("usersCount", -1);
 		}
 		res.success();
 	} else {
