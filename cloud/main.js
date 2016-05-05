@@ -28,9 +28,12 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 
 // Util
 function getRelationIncrement(obj){
+	console.log("1");
 	if(!obj.isNew()) {
+		console.log("2");
 		var relQueueJsonStr = JSON.stringify(obj.op(ClassConstants.Item.RELATION_QUEUE));
 		if(relQueue !== undefined) {
+			console.log("3");
 			var relQueue = JSON.parse(relQueueJsonStr);
 			var operation = relQueue.__op;
 			if (operation == "AddRelation"){
