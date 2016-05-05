@@ -3,16 +3,12 @@ var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 
 var errorWordAlreadyRegistered = "Word already registered";
 
+
 // AlienWord
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
 	if(!newWord.get("objectId") || willAddRelation(newWord, "users") || willRemoveRelation(newWord, "users")){
-		if(willAddRelation(newWord, "users")){
-			newWord.increment("usersCount", 1);
-		} else if(willRemoveRelation(newWord, "users")){
-			newWord.increment("usersCount", -1);
-		}
-		res.success();
+		saveWord(word, res);
 	} else {
 		var query = new Parse.Query(wordClass);
 		query.equalTo("race", newWord.get("race"));
@@ -22,13 +18,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 				if(word){
 	      				res.error(errorWordAlreadyRegistered);
 				} else {
-					word.set("word", word.get("word").toUpperCase())
-					if(willAddRelation(word, "users")){
-						word.increment("usersCount", 1);
-					} else if(willRemoveRelation(word, "users")){
-						word.increment("usersCount", -1);
-					}
-					res.success();
+					saveWord(word, res);
 				}
 			},
 			error: function(error) {
@@ -37,6 +27,18 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 		});
 	}
 });
+
+function saveWord(word, res){
+	console.log("WORD: " + word);
+	word.set("word", word.get("word").toUpperCase())
+	if(willAddRelation(word, "users")){
+		word.increment("usersCount", 1);
+	} else if(willRemoveRelation(word, "users")){
+		word.increment("usersCount", -1);
+	}
+	res.success();
+}
+
 
 // AlienWordTranslation
 Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
@@ -50,6 +52,7 @@ Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	}
 	res.success();
 });
+
 
 // Util
 function willAddRelation(obj, relationName){
