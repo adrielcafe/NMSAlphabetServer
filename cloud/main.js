@@ -5,16 +5,17 @@ var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var word = req.object;
 	word.set("word", word.get("word").toUpperCase());
-	console.log("BEFORE: "+word.get("usersCount"));
-	word.increment("usersCount", getRelationIncrement(word));
-	console.log("AFTER: "+word.get("usersCount"));
+	if(willAddRelation(word, "users")){
+		word.increment("usersCount", 1);
+	} else if(willRemoveRelation(word, "users")){
+		word.increment("usersCount", -1);
+	}
 	res.success();
 });
 
 // AlienWordTranslation
-/*Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
+Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	var wordTranslation = req.object;
-	console.log("TRANSLATE 1: "+JSON.stringify(wordTranslation));
 	wordTranslation.set("translation", wordTranslation.get("translation").toUpperCase());
 	wordTranslation.set("language", wordTranslation.get("language").toLowerCase());
 	if(willAddRelation(wordTranslation, "users")){
@@ -22,25 +23,17 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	} else if(willRemoveRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", -1);
 	}
-	console.log("TRANSLATE 2: "+JSON.stringify(wordTranslation));
 	res.success();
-});*/
+});
 
 // Util
-function getRelationIncrement(obj){
-	console.log("1");
-	var relQueueJsonStr = JSON.stringify(obj.op("queue"));
-	if(relQueue !== undefined) {
-		console.log("2");
-		var relQueue = JSON.parse(relQueueJsonStr);
-		var operation = relQueue.__op;
-		if (operation == "AddRelation"){
-			return 1;
-		} else {
-			return -1;
-		}
-	}
-	return 0;
+function willAddRelation(obj, relationName){
+	var jsonSnippet = '"' + relationName + '":{"__op":"AddRelation"';
+	return JSON.stringify(obj).contains(jsonSnippet);
+}
+function willRemoveRelation(obj, relationName){
+	var jsonSnippet = '"' + relationName + '":{"__op":"RemoveRelation"';
+	return JSON.stringify(obj).contains(jsonSnippet);
 }
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
