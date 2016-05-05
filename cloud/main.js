@@ -1,6 +1,8 @@
 var wordClass = Parse.Object.extend("AlienWord");
 var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 
+var errorWordAlreadyRegistered = "Word already registered";
+
 // AlienWord
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
@@ -11,23 +13,23 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 		success: function(word) {
 			console.log("WORD: "+word);
 			if(word){
-				console.log("OK");
-				res.success();
-			} else {
 				console.log("NOPE");
-      				res.error("DUPLICATED WORD");
+      				res.error(errorWordAlreadyRegistered);
+			} else {
+				console.log("OK");
+				word.set("word", word.get("word").toUpperCase())
+				if(willAddRelation(word, "users")){
+					word.increment("usersCount", 1);
+				} else if(willRemoveRelation(word, "users")){
+					word.increment("usersCount", -1);
+				}
+				res.success();
 			}
 		},
 		error: function(error) {
       			res.error(error.code + ": " + error.message);
 		}
 	});
-	/*word.set("word", word.get("word").toUpperCase())
-	if(willAddRelation(word, "users")){
-		word.increment("usersCount", 1);
-	} else if(willRemoveRelation(word, "users")){
-		word.increment("usersCount", -1);
-	}*/
 });
 
 // AlienWordTranslation
