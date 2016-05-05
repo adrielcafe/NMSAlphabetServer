@@ -7,7 +7,6 @@ var errorWordAlreadyRegistered = "Word already registered";
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
 	if(!newWord.get("objectId") || willAddRelation(newWord, "users") || willRemoveRelation(newWord, "users")){
-		console.log(JSON.stringify(newWord));
 		if(willAddRelation(newWord, "users")){
 			newWord.increment("usersCount", 1);
 		} else if(willRemoveRelation(newWord, "users")){
@@ -20,12 +19,9 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 		query.equalTo("word", newWord.get("word"));
 		query.find({
 			success: function(word) {
-				console.log("WORD: "+word);
 				if(word){
-					console.log("NOPE");
 	      				res.error(errorWordAlreadyRegistered);
 				} else {
-					console.log("OK");
 					word.set("word", word.get("word").toUpperCase())
 					if(willAddRelation(word, "users")){
 						word.increment("usersCount", 1);
