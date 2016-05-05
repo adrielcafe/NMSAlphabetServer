@@ -15,11 +15,11 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 				res.success();
 			} else {
 				console.log("NOPE");
-      				response.error("DUPLICATED WORD");
+      				res.error("DUPLICATED WORD");
 			}
 		},
 		error: function(error) {
-      			response.error(error.code + ": " + error.message);
+      			res.error(error.code + ": " + error.message);
 		}
 	});
 	/*word.set("word", word.get("word").toUpperCase())
