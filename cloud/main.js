@@ -1,7 +1,8 @@
 var wordClass = Parse.Object.extend("AlienWord");
 var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 
-var errorWordAlreadyRegistered = "Word already registered";
+var error1 = "Word already registered";
+var error2 = "Word already translated to ";
 
 
 // AlienWord
@@ -16,7 +17,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 		query.find({
 			success: function(word) {
 				if(word){
-	      				res.error(errorWordAlreadyRegistered);
+	      				res.error(error1);
 				} else {
 					saveWord(word, res);
 				}
@@ -29,8 +30,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 });
 
 function saveWord(word, res){
-	console.log("WORD: " + word);
-	word.set("word", word.get("word").toUpperCase())
+	word.set("word", word.get("word").toUpperCase());
 	if(willAddRelation(word, "users")){
 		word.increment("usersCount", 1);
 	} else if(willRemoveRelation(word, "users")){
@@ -42,7 +42,30 @@ function saveWord(word, res){
 
 // AlienWordTranslation
 Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
-	var wordTranslation = req.object;
+	var newWordTranslation = req.object;
+	if(!newWordTranslation.get("objectId") || willAddRelation(newWordTranslation, "users") || willRemoveRelation(newWordTranslation, "users")){
+		saveWord(newWordTranslation, res);
+	} else {
+		var query = new Parse.Query(wordTranslationClass);
+		query.equalTo("race", newWordTranslation.get("race"));
+		query.equalTo("word", newWordTranslation.get("word"));
+		query.equalTo("language", newWordTranslation.get("language"));
+		query.find({
+			success: function(wordTranslation) {
+				if(wordTranslation){
+	      				res.error(error2 + wordTranslation.get("language"));
+				} else {
+					saveWordTranslation(wordTranslation, res);
+				}
+			},
+			error: function(error) {
+	      			res.error(error.code + ": " + error.message);
+			}
+		});
+	}
+});
+
+function saveWordTranslation(wordTranslation, res){
 	wordTranslation.set("translation", wordTranslation.get("translation").toUpperCase())
 	wordTranslation.set("language", wordTranslation.get("language").toLowerCase())
 	if(willAddRelation(wordTranslation, "users")){
@@ -51,7 +74,7 @@ Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 		wordTranslation.increment("usersCount", -1);
 	}
 	res.success();
-});
+}
 
 
 // Util
