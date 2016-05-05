@@ -4,7 +4,6 @@ var wordTranslationClass = Parse.Object.extend("AlienWordTranslation");
 // AlienWord
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
-	console.log("WORD STR: "+newWord.get("word"));
 	var query = new Parse.Query(wordClass);
 	query.equalTo("race", newWord.get("race"));
 	query.equalTo("word", newWord.get("word"));
@@ -13,13 +12,14 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 			console.log("WORD: "+word);
 			if(word){
 				console.log("OK");
+				res.success();
 			} else {
 				console.log("NOPE");
+      				response.error("DUPLICATED WORD");
 			}
-			res.success();
 		},
 		error: function(error) {
-			alert("Error: " + error.code + " " + error.message);
+      			response.error(error.code + ": " + error.message);
 		}
 	});
 	/*word.set("word", word.get("word").toUpperCase())
