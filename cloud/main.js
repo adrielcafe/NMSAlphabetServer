@@ -6,7 +6,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var word = req.object;
 	word.set("word", word.get("word").toUpperCase());
 	console.log("BEFORE: "+word.get("usersCount"));
-	incrementRelation(word);
+	word.increment("usersCount", getRelationIncrement(word));
 	console.log("AFTER: "+word.get("usersCount"));
 	res.success();
 });
@@ -27,23 +27,20 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 });*/
 
 // Util
-function incrementRelation(obj){
+function getRelationIncrement(obj){
 	if(!obj.isNew()) {
 		var relQueueJsonStr = JSON.stringify(obj.op(ClassConstants.Item.RELATION_QUEUE));
 		if(relQueue !== undefined) {
 			var relQueue = JSON.parse(relQueueJsonStr);
 			var operation = relQueue.__op;
 			if (operation == "AddRelation"){
-				obj.increment("usersCount", 1);
+				return 1;
 			} else {
-				obj.increment("usersCount", -1);
+				return -1;
 			}
 		}
 	}
-}
-function willRemoveRelation(obj, relationName){
-	var jsonSnippet = '"' + relationName + '":{"__op":"RemoveRelation"';
-	return JSON.stringify(obj).contains(jsonSnippet);
+	return 0;
 }
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
