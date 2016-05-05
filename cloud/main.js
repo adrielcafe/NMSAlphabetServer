@@ -16,15 +16,15 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 // AlienWordTranslation
 Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	var wordTranslation = req.object;
-	console.log("TRANSLATE 1: "+wordTranslation.get("translation"));
+	console.log("TRANSLATE 1: "+JSON.stringify(wordTranslation));
 	wordTranslation.set("translation", wordTranslation.get("translation").toUpperCase());
 	wordTranslation.set("language", wordTranslation.get("language").toLowerCase());
-	console.log("TRANSLATE 2: "+wordTranslation.get("translation"));
 	if(willAddRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", 1);
 	} else if(willRemoveRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", -1);
 	}
+	console.log("TRANSLATE 2: "+JSON.stringify(wordTranslation));
 	res.success();
 });
 
