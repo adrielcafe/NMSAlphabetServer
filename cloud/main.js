@@ -8,7 +8,7 @@ var errorWordAlreadyRegistered = "Word already registered";
 Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	var newWord = req.object;
 	if(!newWord.get("objectId") || willAddRelation(newWord, "users") || willRemoveRelation(newWord, "users")){
-		saveWord(word, res);
+		saveWord(newWord, res);
 	} else {
 		var query = new Parse.Query(wordClass);
 		query.equalTo("race", newWord.get("race"));
