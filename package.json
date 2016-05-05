@@ -1,7 +1,7 @@
 {
   "name": "nmsalphabet",
-  "version": "1.4.0",
-  "description": "An unofficial app for No Man's Sky",
+  "version": "1.0.0",
+  "description": "Server of NMS Alphabet",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -9,10 +9,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "express": "~4.11.x",
+    "express": "~4.13.4",
     "kerberos": "~0.0.x",
-    "parse": "~1.8.x",
-    "parse-server": "~2.2.x"
+    "parse": "~1.8.0",
+    "parse-server": "~2.2.7"
   },
   "scripts": {
     "start": "node index.js"
