@@ -23,6 +23,16 @@ Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	} else if(willRemoveRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", -1);
 	}
+	if(willAddRelation(wordTranslation, "likes")){
+		wordTranslation.increment("likesCount", 1);
+	} else if(willRemoveRelation(wordTranslation, "likes")){
+		wordTranslation.increment("likesCount", -1);
+	}
+	if(willAddRelation(wordTranslation, "dislikes")){
+		wordTranslation.increment("dislikesCount", 1);
+	} else if(willRemoveRelation(wordTranslation, "dislikes")){
+		wordTranslation.increment("dislikesCount", -1);
+	}
 	res.success();
 });
 
