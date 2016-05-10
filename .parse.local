@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "NMSAlphabet": {
+      "applicationId": "opu6rH8YJpyQew8ohv3k30oAsQD1VC5qKj5hn2Bk"
+    },
+    "_default": {
+      "link": "NMSAlphabet"
+    }
+  }
+}
