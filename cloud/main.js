@@ -5,21 +5,21 @@ var Word = Parse.Object.extend("AlienWord");
 var WordTranslation = Parse.Object.extend("AlienWordTranslation");
 
 Parse.Cloud.define("translateWords", function(req, res) {
-	var words = _(req.params.words).toArray();
 	var race = Race.createWithoutData(req.params.raceId);
+	var words = _(req.params.words).toArray();
 	var language = req.params.language;
 	var translations = {};
 
 	var qWords = new Parse.Query(Word);
-	qWords.containedIn("word", words);
 	qWords.equalTo("race", race);
+	qWords.containedIn("word", words);
 	qWords.find({
 		success: function(results) {
 			function getTranslation(word){
 				var qTranslations = new Parse.Query(WordTranslation);
-				qTranslations.equalTo("language", language);
 				qTranslations.equalTo("race", race);
 				qTranslations.equalTo("word", word);
+				qTranslations.equalTo("language", language);
 				qTranslations.greaterThan("likesCount", 0);
 				qTranslations.descending("likesCount");
 				qTranslations.ascending("dislikesCount");
@@ -27,7 +27,6 @@ Parse.Cloud.define("translateWords", function(req, res) {
 					translations[word.get("word")] = translation;
 				});
 			}
-
 			Parse.Promise.when(results.map(getTranslation)).then(function(){
 				res.success(translations);
 			});
@@ -44,7 +43,7 @@ Parse.Cloud.beforeSave("AlienWord", function(req, res) {
 	word.set("word", word.get("word").toUpperCase());
 	if(willAddRelation(word, "users")){
 		word.increment("usersCount", 1);
-	} else if(willRemoveRelation(word, "users")){
+	} else if(willRemoveRelation(word, "users") && word.get("usersCount") > 0){
 		word.increment("usersCount", -1);
 	}
 	res.success();
@@ -56,17 +55,17 @@ Parse.Cloud.beforeSave("AlienWordTranslation", function(req, res) {
 	wordTranslation.set("language", wordTranslation.get("language").toLowerCase());
 	if(willAddRelation(wordTranslation, "users")){
 		wordTranslation.increment("usersCount", 1);
-	} else if(willRemoveRelation(wordTranslation, "users")){
+	} else if(willRemoveRelation(wordTranslation, "users") && wordTranslation.get("usersCount") > 0){
 		wordTranslation.increment("usersCount", -1);
 	}
 	if(willAddRelation(wordTranslation, "likes")){
 		wordTranslation.increment("likesCount", 1);
-	} else if(willRemoveRelation(wordTranslation, "likes")){
+	} else if(willRemoveRelation(wordTranslation, "likes") && wordTranslation.get("likesCount") > 0){
 		wordTranslation.increment("likesCount", -1);
 	}
 	if(willAddRelation(wordTranslation, "dislikes")){
 		wordTranslation.increment("dislikesCount", 1);
-	} else if(willRemoveRelation(wordTranslation, "dislikes")){
+	} else if(willRemoveRelation(wordTranslation, "dislikes") && wordTranslation.get("dislikesCount") > 0){
 		wordTranslation.increment("dislikesCount", -1);
 	}
 	res.success();
